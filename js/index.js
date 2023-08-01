@@ -1,4 +1,5 @@
 import greetModule from "/wasm/greet.js";
+import sobelModule from "/wasm/sobel.js";
 
 
 const MAX_FILES = 32; // TODO: this number is arbitiary
@@ -12,8 +13,6 @@ const btnProceed = document.getElementById("btnProceed");
 btnProceed.classList.add("btn-disabled");
 
 fileBox.addEventListener("click", () => fileInput.click())
-
-
 
 fileBox.addEventListener("drop", async (e) => {
     e.preventDefault();
@@ -64,10 +63,55 @@ function readFileAsBase64(file) {
     })
 }
 
+function extractPixelDataFromBase64(data) {
+    const image = new Image();
+    image.src = data;
 
-btnProceed.addEventListener("click", () => {
-    console.log(selectedFiles);
-})
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+
+    canvas.width = image.width;
+    canvas.height = image.height;
+    context.drawImage(image, 0, 0);
+
+
+    return context.getImageData(0, 0, image.width, image.height);
+}
+
+function displayImage(data, width, height) {
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext("2d");
+
+    const imageData = new ImageData(data, width, height);
+    ctx.putImageData(imageData, 0, 0);
+    document.body.appendChild(canvas);
+}
+
+btnProceed.addEventListener("click", async () => {
+for (const file of selectedFiles) {
+    const Module = await sobelModule();
+    let cv_apply_sobel_filter = Module.cwrap("cv_apply_sobel_filter", "number", ["number", "number", "number", "number"]);
+
+    const { width, height, data } = extractPixelDataFromBase64(file[1]); // ImageData;
+    let channels = 4;
+
+    const dataPtr = Module._malloc(width * height * channels);
+    const dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, width * height * channels);
+    dataHeap.set(data);
+
+    const resultPtr = cv_apply_sobel_filter(dataPtr, width, height, channels);
+
+    displayImage(new Uint8ClampedArray(resultPtr), width, height);
+
+    Module._free(resultPtr);
+    Module._free(dataPtr);
+    Module._free(dataHeap.byteOffset);
+    Module._free(dataHeap);
+}
+});
 
 fileInput.addEventListener("change", async (e) => {
     btnProceed.classList.remove("btn-disabled");
