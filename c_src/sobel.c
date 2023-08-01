@@ -1,8 +1,9 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include <emscripten/emscripten.h>
 #include <assert.h>
+
+#include <emscripten/emscripten.h>
 
 #define SOBEL_K_SIZE 3
 

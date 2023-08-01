@@ -8,4 +8,5 @@ SET CCFLAGS=-O2 -sASSERTIONS -sALLOW_MEMORY_GROWTH -s EXPORTED_RUNTIME_METHODS="
 
 if not exist %OUTPUT_DIR% mkdir %OUTPUT_DIR%
 
-%CC% %CCFLAGS% %SOURCE_DIR%/sobel.c -o %OUTPUT_DIR%/sobel.js
+rem %CC% %CCFLAGS% %SOURCE_DIR%/sobel.c -o %OUTPUT_DIR%/sobel.js
+%CC% %CCFLAGS% %SOURCE_DIR%/resize.c -o %OUTPUT_DIR%/resize.js
