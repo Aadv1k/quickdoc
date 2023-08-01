@@ -3,7 +3,7 @@
 set SOURCE_DIR=c_src
 set OUTPUT_DIR=wasm
 
-SET CCFLAGS=-s EXPORTED_RUNTIME_METHODS="ccall,cwrap" -s EXPORTED_FUNCTIONS="['_malloc', '_free']"  -s EXPORT_ES6=1 -s MODULARIZE=1 
+SET CCFLAGS=-O2 -sASSERTIONS -sALLOW_MEMORY_GROWTH -s EXPORTED_RUNTIME_METHODS="ccall,cwrap" -s EXPORTED_FUNCTIONS="['_malloc', '_free']"  -s EXPORT_ES6=1 -s MODULARIZE=1 
 SET CC=emcc
 
 if not exist %OUTPUT_DIR% mkdir %OUTPUT_DIR%

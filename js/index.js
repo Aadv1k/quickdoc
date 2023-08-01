@@ -9,6 +9,7 @@ const selectedFiles = new Map();
 const fileBox = document.getElementById("fileBox");
 const fileInput = document.getElementById("fileInput");
 const btnProceed = document.getElementById("btnProceed");
+const imageContainer = document.getElementById("imageContainer");
 
 btnProceed.classList.add("btn-disabled");
 
@@ -78,39 +79,38 @@ function extractPixelDataFromBase64(data) {
     return context.getImageData(0, 0, image.width, image.height);
 }
 
-function displayImage(data, width, height) {
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-
-    const ctx = canvas.getContext("2d");
-
-    const imageData = new ImageData(data, width, height);
-    ctx.putImageData(imageData, 0, 0);
-    document.body.appendChild(canvas);
-}
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
 
 btnProceed.addEventListener("click", async () => {
-for (const file of selectedFiles) {
-    const Module = await sobelModule();
-    let cv_apply_sobel_filter = Module.cwrap("cv_apply_sobel_filter", "number", ["number", "number", "number", "number"]);
+  const Module = await sobelModule();
 
-    const { width, height, data } = extractPixelDataFromBase64(file[1]); // ImageData;
-    let channels = 4;
+  for (const file of selectedFiles) {
+    let cv_apply_sobel_filter = Module.cwrap("cv_apply_sobel_filter_rgba", "void", ["number", "number", "number", "number"]);
 
-    const dataPtr = Module._malloc(width * height * channels);
-    const dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, width * height * channels);
-    dataHeap.set(data);
+    const { width, height, data } = extractPixelDataFromBase64(file[1]); // ImageData object;
+    const channels = 4;
 
-    const resultPtr = cv_apply_sobel_filter(dataPtr, width, height, channels);
+    const ptr = Module._malloc(width * height * channels);
+    let heap = new Uint8Array(Module.HEAPU8.buffer, ptr, width * height * channels);
+    heap.set(data);
 
-    displayImage(new Uint8ClampedArray(resultPtr), width, height);
+    cv_apply_sobel_filter(ptr, width, height, channels); 
 
-    Module._free(resultPtr);
-    Module._free(dataPtr);
-    Module._free(dataHeap.byteOffset);
-    Module._free(dataHeap);
-}
+    data.set(heap);
+
+    // Display the processed image on the canvas without creating a new canvas element
+    canvas.width = width;
+    canvas.height = height;
+    const imageData = new ImageData(new Uint8ClampedArray(data, data.byteOffset, data.length), width, height);
+    ctx.putImageData(imageData, 0, 0);
+    imageContainer.appendChild(canvas);
+
+    Module._free(ptr);
+    heap = null;
+  }
+
+  selectedFiles.clear();
 });
 
 fileInput.addEventListener("change", async (e) => {
@@ -130,6 +130,6 @@ fileInput.addEventListener("change", async (e) => {
         selectedFiles.set(file.name, image.src);
 
         image.classList.add("img--thumb");
-        document.getElementById("imageContainer").appendChild(image);
+        imageContainer.appendChild(image);
     }
 });
