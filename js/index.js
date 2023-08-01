@@ -7,9 +7,13 @@ const selectedFiles = new Map();
 
 const fileBox = document.getElementById("fileBox");
 const fileInput = document.getElementById("fileInput");
+const btnProceed = document.getElementById("btnProceed");
 
+btnProceed.classList.add("btn-disabled");
 
 fileBox.addEventListener("click", () => fileInput.click())
+
+
 
 fileBox.addEventListener("drop", async (e) => {
     e.preventDefault();
@@ -61,8 +65,13 @@ function readFileAsBase64(file) {
 }
 
 
+btnProceed.addEventListener("click", () => {
+    console.log(selectedFiles);
+})
 
 fileInput.addEventListener("change", async (e) => {
+    btnProceed.classList.remove("btn-disabled");
+
     let files = e.target.files;
     if (files.length > MAX_FILES) {
         throw new Error("[quickdoc] max amount of files exceeded");

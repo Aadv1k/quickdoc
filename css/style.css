@@ -9,6 +9,45 @@
     --gray-3: #454b53;
 }
 
+h1,h2,h3 {
+    color: var(--indigo);
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+.btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+
+.btn-primary {
+    transition: background-color 100ms ease;
+    background-color: var(--blue);
+    padding: .8rem 1.3rem;
+    font-size: .9rem;
+    color: white;
+    border-radius: 4px;
+    text-transform: capitalize;
+}
+
+.select {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -39,7 +78,7 @@ body {
   aspect-ratio: 1 / 1.4142135624;
   max-width: 150px;
   border-radius: 2px;
-  box-shadow: rgba(99, 99, 99, 0.5) 0px 2px 8px 0px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.25), inset 0px 0px 0px 1px rgba(255, 255, 255, 0.1);
 }
 
 .file-box {
@@ -64,6 +103,11 @@ body {
 @media (hover: hover) {
     .file-box:hover {
         background-color: var(--gray-1);
+    }
+
+
+    .btn-primary:not(.btn-disabled):hover {
+        background-color: #0f59ac;
     }
 }
 
