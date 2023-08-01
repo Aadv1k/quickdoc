@@ -4,23 +4,21 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
     <title>quickdoc</title>
-    <!-- link href="./css/style.css" rel="stylesheet"/ -->
+    <link href="./css/style.css" rel="stylesheet"/>
   </head>
   <body>
 
-  <h1>Quickdoc</h1>
+  <h1 class="title">Quickdoc</h1>
 
-  <canvas width="500" height="500" style="border: 2px dotted #191919;" id="primaryCanvas"></canvas>
 
-  <div>
-    <label for="avatar">Upload documents</label>
-    <input type="file" id="fileInput" name="files" accept="image/png, image/jpeg" multiple>
+  <div class="file-box" id="fileBox">
+    Click to select files or drop here
+    <input type="file" id="fileInput" class="file-box__input" accept="image/*" multiple>
   </div>
 
+  <div id="imageContainer" class="image-container"> </div>
 
 
-
+  </body>
   <script src="./js/index.js" defer type="module"></script>
-
-
 </html>
