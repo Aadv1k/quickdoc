@@ -19,6 +19,8 @@ fileBox.addEventListener("drop", async (e) => {
     e.preventDefault();
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
+
+    btnProceed.classList.remove("btn-disabled");
         for (const file of files) {
 
         if (selectedFiles.get(file.name)) continue;
