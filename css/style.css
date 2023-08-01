@@ -1,5 +1,56 @@
+ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;900&display=swap');
+
+:root {
+    --main-bg: #2b7a77;
+    --text-1: #17242a;
+    --font-sans: Inter;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+body {
+  background-color: var(--main-bg);
+  width: 90%;
+  margin: 0 auto;
+  font-family: var(--font-sans);
+}
+
+nav.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: 1rem;
+    color: white;
+}
+
+.nav__logo {
+    font-size: 2.35rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.nav__logo span {
+    display: block;
+    color: var(--text-1);
+}
+
+
+
+
+.nav__links {
+    display: flex;
+    list-style: none;
+    gap: .25rem;
+    padding: .5rem;
+}
+
+
+.nav__links a {
+    color: inherit;
+    text-transform: capitalize;
+    text-decoration: none;
 }
