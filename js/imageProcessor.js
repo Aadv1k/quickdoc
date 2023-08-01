@@ -25,12 +25,9 @@ const handleProceedClick = async (event) => {
         const imgData = extractPixelDataFromBase64(base64Image);
 
         let cv_apply_sobel_filter = sobelModule.cwrap("cv_apply_sobel_filter_rgba", "void", ["number", "number", "number", "number"]);
-        let cv_resize_down_by_xy = resizeModule.cwrap("cv_resize_down_by_xy", "void", ["number", "number", "number", "number", "number", "number"]);
 
         let { width, height, data } = imgData;
         const channels = 4;
-
-        const aspectRatio = width / height;
 
         const ptr = sobelModule._malloc(width * height * channels);
         let heap = new Uint8Array(sobelModule.HEAPU8.buffer, ptr, width * height * channels);
@@ -38,21 +35,25 @@ const handleProceedClick = async (event) => {
 
         cv_apply_sobel_filter(ptr, width, height, channels); 
 
-        const FACTOR = 2;
+        const sobelFilteredData = new Uint8ClampedArray(heap);
 
-        width /=  FACTOR;
-        height /= FACTOR;
+        /* THIS IS TEMP */
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
 
-        cv_resize_down_by_xy(ptr, width, height, channels, FACTOR, FACTOR);
+        canvas.width = width;
+        canvas.height = height;
 
-        data.set(heap);
+        const id = new ImageData(sobelFilteredData, width, height);
+        context.putImageData(id, 0, 0);
 
-        /* DO SOMETHING HERE */
+        document.body.appendChild(canvas);
+
+        /****************/
 
         sobelModule._free(ptr);
         heap = null;
     }
-
     SelectedFileMap.clear();
 }
 

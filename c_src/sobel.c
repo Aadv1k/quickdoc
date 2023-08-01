@@ -19,7 +19,8 @@ static int sobelY[SOBEL_K_SIZE][SOBEL_K_SIZE] = {
   {-1, 0, 1}
 };
 
-EMSCRIPTEN_KEEPALIVE void cv_apply_sobel_filter_rgba(unsigned char * data, size_t width, size_t height, int channels) {
+EMSCRIPTEN_KEEPALIVE
+void cv_apply_sobel_filter_rgba(unsigned char * data, size_t width, size_t height, int channels) {
   for (int i = 0; i < height*width*channels; i+=channels) {
       unsigned char R = data[i],
                     G = data[i+1],
