@@ -29,12 +29,10 @@ const handleFileBoxDrop = async (event) => {
             image.src = await readFileAsBase64(file);
 
             SelectedFileMap.set(file.name, image.src);
-
-            image.classList.add("img--thumb");
-            document.getElementById("imageContainer").appendChild(image);
         }
     }
     event.target.classList.remove('file-box--active');
+    renderImagePreviews();
 }
 
 const handleFileBoxDragover = (event) => {
@@ -56,18 +54,50 @@ const handleFileInputChange = async (event) => {
     }
 
     for (const file of files) {
-        if (SelectedFileMap.get(file.name)) continue;
+        if (SelectedFileMap.has(file.name)) continue;
 
         const image = new Image();
         image.src = await readFileAsBase64(file);
 
         SelectedFileMap.set(file.name, image.src);
-
-        image.classList.add("img--thumb");
-        imageContainer.appendChild(image);
     }
+
+    renderImagePreviews();
 }
 
+
+function renderImagePreviews() {
+  imageContainer.innerHTML = "";
+
+  for (const [imgName, imgData] of SelectedFileMap) {
+    const imagePreviewComponent = document.createElement("div");
+    imagePreviewComponent.classList.add("preview");
+    imagePreviewComponent.setAttribute("data-value", imgName);
+
+    const image = new Image();
+    image.src = imgData;
+    image.classList.add("thumbnail");
+    imagePreviewComponent.appendChild(image);
+
+    const p = document.createElement("p");
+    p.innerText = imgName;
+    imagePreviewComponent.appendChild(p);
+
+    const button = document.createElement("button");
+    button.classList.add("btn");
+    button.innerText = "X";
+    button.addEventListener("click", (e) => {
+        console.log("hello");
+        SelectedFileMap.delete(e.target.parentElement.getAttribute("data-value"));
+        e.target.parentElement.remove();
+    })
+
+    imagePreviewComponent.appendChild(button);
+
+
+    imageContainer.appendChild(imagePreviewComponent);
+  }
+}
 
 export default function setupFileUploader() {
     const fileBox = document.getElementById("fileBox");
