@@ -1,6 +1,5 @@
 import SelectedFileMap from "/js/SelectedFileMap.js"
 
-
 const MAX_FILES = 32; // TODO: this number is arbitiary
 
 const readFileAsBase64 = (file) => {
@@ -14,7 +13,6 @@ const readFileAsBase64 = (file) => {
         fileReader.onerror = () => reject(fileReader.error);
     })
 }
-
 
 const handleFileBoxDrop = async (event) => {
     event.preventDefault();
@@ -94,7 +92,6 @@ function renderImagePreviews() {
 
     imagePreviewComponent.appendChild(button);
 
-
     imageContainer.appendChild(imagePreviewComponent);
   }
 }
@@ -102,7 +99,6 @@ function renderImagePreviews() {
 export default function setupFileUploader() {
     const fileBox = document.getElementById("fileBox");
     const fileInput = document.getElementById("fileInput");
-
 
     fileBox.addEventListener("click", () => fileInput.click())
     fileBox.addEventListener("drop", handleFileBoxDrop)

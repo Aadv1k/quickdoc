@@ -17,46 +17,19 @@ const extractPixelDataFromBase64 = (data) => {
 }
   
 const handleProceedClick = async (event) => {
-  const otsuModule = await OtsuModule();
+  console.log("I was invoked");
 
   for (const [imageName, base64Image] of SelectedFileMap) {
     const imgData = extractPixelDataFromBase64(base64Image);
+    console.log(imgData);
 
-    let cv_apply_otsu_threshold_rgba = otsuModule.cwrap(
-      "cv_apply_otsu_threshold_rgba",
-      "void",
-      ["number", "number", "number", "number"]
-    );
-
-    let { width, height, data } = imgData;
-    const channels = 4;
-
-    const ptr = otsuModule._malloc(width * height * channels);
-    let heap = new Uint8Array(otsuModule.HEAPU8.buffer, ptr, width * height * channels);
-    heap.set(data);
-
-    cv_apply_otsu_threshold_rgba(ptr, width, height, channels);
-
-    // Create a copy of the processed data
-    const processedData = new Uint8Array(heap);
-
-    otsuModule._free(ptr);
-
-    /* THIS IS TEMP */
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-
-    canvas.width = width;
-    canvas.height = height;
-
-    const id = new ImageData(new Uint8ClampedArray(processedData), width, height);
-    context.putImageData(id, 0, 0);
-
-    document.body.appendChild(canvas);
-
-    /****************/
+    // convert to grayscale for better computation
+    // use laplacian to determine the "paper"
+    // -> on detecting a "white pixel group" set all the preceding pixels to black. reverse and do the same
+    // rotate the image, EG shift all the valid pixels immediately to the start
+    // clean up and resize baby
+    // apply thresholding
   }
-  SelectedFileMap.clear();
 };
 
 
