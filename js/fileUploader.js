@@ -1,5 +1,6 @@
 import SelectedFileMap from "/js/SelectedFileMap.js"
 
+
 const MAX_FILES = 32; // TODO: this number is arbitiary
 
 const readFileAsBase64 = (file) => {
@@ -87,7 +88,6 @@ function renderImagePreviews() {
     button.classList.add("btn");
     button.innerText = "X";
     button.addEventListener("click", (e) => {
-        console.log("hello");
         SelectedFileMap.delete(e.target.parentElement.getAttribute("data-value"));
         e.target.parentElement.remove();
     })

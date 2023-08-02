@@ -91,20 +91,35 @@ h2 {
     text-align: center;
 }
 
+.workspace {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.renderer {
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+    background-color: var(--tan-200);
+}
+
 .image-container {
   display: flex;
   gap: 0.75rem;
   align-items: center;
   min-width: 100%;
-  overflow-x: scroll;
   height: 200px;
+  overflow-x: scroll;
+padding-inline: 1rem;
+padding-block: 1.25rem;
 }
 
 .preview {
   position: relative;
 
   height: 100%;
-  min-width: 150px;
+  min-width: 50%;
 
   display: flex;
   gap: 0.5rem;
@@ -126,7 +141,8 @@ h2 {
   color: #fff;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 5px;
-  font-size: 12px;
+  font-size: 11px;
+  word-wrap: anywhere
 }
 
 .preview button {
@@ -139,6 +155,7 @@ h2 {
   height: 1.5rem;
   font-size: .8rem;
 }
+
 
 .file-box {
     width: 100%;
@@ -173,17 +190,9 @@ h2 {
     }
 }
 
-@media only screen and (min-width: 600px) {
-    .image-container {
-        flex-direction: column;
-        min-width: auto;
-        width: fit-content;
-        padding-inline: .5rem;
-        height: 500px;
-    }
 
+@media only screen and (min-width: 600px) {
     .preview {
-        width: 250px;
-        aspect-ratio: 16 / 9;
+        min-width: 33%;
     }
 }

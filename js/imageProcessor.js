@@ -1,4 +1,4 @@
-import SobelModule from "/wasm/sobel.js";
+import OtsuModule from "/wasm/global.js";
 import ResizeModule from "/wasm/resize.js";
 import SelectedFileMap from "/js/SelectedFileMap.js";
 
@@ -17,45 +17,48 @@ const extractPixelDataFromBase64 = (data) => {
 }
   
 const handleProceedClick = async (event) => {
-    const sobelModule = await SobelModule();
-    const resizeModule = await ResizeModule();
+  const otsuModule = await OtsuModule();
 
-    for (const [imageName, base64Image] of SelectedFileMap) {
+  for (const [imageName, base64Image] of SelectedFileMap) {
+    const imgData = extractPixelDataFromBase64(base64Image);
 
-        const imgData = extractPixelDataFromBase64(base64Image);
+    let cv_apply_otsu_threshold_rgba = otsuModule.cwrap(
+      "cv_apply_otsu_threshold_rgba",
+      "void",
+      ["number", "number", "number", "number"]
+    );
 
-        let cv_apply_sobel_filter = sobelModule.cwrap("cv_apply_sobel_filter_rgba", "void", ["number", "number", "number", "number"]);
+    let { width, height, data } = imgData;
+    const channels = 4;
 
-        let { width, height, data } = imgData;
-        const channels = 4;
+    const ptr = otsuModule._malloc(width * height * channels);
+    let heap = new Uint8Array(otsuModule.HEAPU8.buffer, ptr, width * height * channels);
+    heap.set(data);
 
-        const ptr = sobelModule._malloc(width * height * channels);
-        let heap = new Uint8Array(sobelModule.HEAPU8.buffer, ptr, width * height * channels);
-        heap.set(data);
+    cv_apply_otsu_threshold_rgba(ptr, width, height, channels);
 
-        cv_apply_sobel_filter(ptr, width, height, channels); 
+    // Create a copy of the processed data
+    const processedData = new Uint8Array(heap);
 
-        const sobelFilteredData = new Uint8ClampedArray(heap);
+    otsuModule._free(ptr);
 
-        /* THIS IS TEMP */
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
+    /* THIS IS TEMP */
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
 
-        canvas.width = width;
-        canvas.height = height;
+    canvas.width = width;
+    canvas.height = height;
 
-        const id = new ImageData(sobelFilteredData, width, height);
-        context.putImageData(id, 0, 0);
+    const id = new ImageData(new Uint8ClampedArray(processedData), width, height);
+    context.putImageData(id, 0, 0);
 
-        document.body.appendChild(canvas);
+    document.body.appendChild(canvas);
 
-        /****************/
+    /****************/
+  }
+  SelectedFileMap.clear();
+};
 
-        sobelModule._free(ptr);
-        heap = null;
-    }
-    SelectedFileMap.clear();
-}
 
 export default function setupImageProcessor() {
     const btnProceed = document.getElementById("btnProceed");
