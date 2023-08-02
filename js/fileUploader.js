@@ -20,9 +20,9 @@ const handleFileBoxDrop = async (event) => {
     const files = event.dataTransfer.files;
 
     if (files && files.length > 0) {
-        btnProceed.classList.remove("btn-disabled");
+        btnProceed.classList.remove("btn--disabled");
         for (const file of files) {
-
+            if (!file.type.startsWith("image")) continue;
             if (SelectedFileMap.get(file.name)) continue;
 
             const image = new Image();
@@ -34,21 +34,21 @@ const handleFileBoxDrop = async (event) => {
             document.getElementById("imageContainer").appendChild(image);
         }
     }
-    event.target.classList.remove('file-box--dragover');
+    event.target.classList.remove('file-box--active');
 }
 
 const handleFileBoxDragover = (event) => {
     event.preventDefault();
-    event.target.classList.add('file-box--dragover');
+    event.target.classList.add('file-box--active');
 }
 
 const handleFileBoxDragleave = (event) => {
     event.preventDefault();
-    event.target.classList.remove('file-box--dragover');
+    event.target.classList.remove('file-box--active');
 }
 
 const handleFileInputChange = async (event) => {
-    btnProceed.classList.remove("btn-disabled");
+    btnProceed.classList.remove("btn--disabled");
 
     let files = event.target.files;
     if (files.length > MAX_FILES) {
