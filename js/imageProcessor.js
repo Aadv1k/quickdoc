@@ -26,22 +26,13 @@ const handleProceedClick = async (event) => {
     var buffer = Module._malloc(imageBytes.length * imageBytes.BYTES_PER_ELEMENT);
     Module.HEAPU8.set(imageBytes, buffer);
 
-      /*
-    const cv_apply_sobel_filter_rgba = Module.cwrap(
-        "cv_apply_sobel_filter_rgba", null,
-        ["number", "number", "number", "number"]
-    cv_apply_sobel_filter_rgba(buffer, width, height, channels);
-    */
-
-    Module.ccall("cv_apply_sobel_filter_rgba", null, ["number", "number", "number", "number"], [buffer, width, height, channels]);
+    Module.ccall("cv_parse_image_rgba", null, ["number", "number", "number", "number"], [buffer, width, height, channels]);
     Module._free(buffer);
-  }
-};
 
-
-      /* RENDER IT 
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
+
+    const processedImageData = new ImageData(new Uint8ClampedArray(imageBytes), width, height);
 
     canvas.width = width;
     canvas.height = height;
@@ -49,15 +40,9 @@ const handleProceedClick = async (event) => {
     context.putImageData(processedImageData, 0, 0);
 
     document.body.appendChild(canvas);
-      
-      /*******/
 
-    // convert to grayscale for better computation
-    // use sobel to determine the "paper"
-    // -> on detecting a "white pixel group" set all the preceding pixels to black. reverse and do the same
-    // rotate the image, EG shift all the valid pixels immediately to the start
-    // clean up and resize baby
-    // apply thresholding
+  }
+};
 
 
 export default function setupImageProcessor() {
