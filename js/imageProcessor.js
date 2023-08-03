@@ -34,9 +34,6 @@ const handleProceedClick = async (event) => {
     */
 
     Module.ccall("cv_apply_sobel_filter_rgba", null, ["number", "number", "number", "number"], [buffer, width, height, channels]);
-
-    console.log(imageBytes);
-
     Module._free(buffer);
   }
 };
