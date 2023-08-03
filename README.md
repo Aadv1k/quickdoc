@@ -1,17 +1,13 @@
 # Quickdoc
 
-Quick browser only utilities for scanned documents
+> This tool is quite exploratory in nature, hence functionality may break or become unavaliable. Please feel free to raise an issue if this happens, thanks! 
 
-- [ ] Auto clean, crop and convert the scanned document(s) to pdf
-- [ ] OCR Support + Export document as word
+Quickdoc is a [WebAssembly](https://webassembly.org/) based site that can **automatically** trim, de-noise and filter a image, similar to an [image scanner](https://en.wikipedia.org/wiki/Image_scanner)
+
 
 ## Setup
 
-The project uses [WASM](https://webassembly.org/) for image processing, hence you will need [emscripten](https://emscripten.org), and `emcc` to compile the C source to wasm
-
-> **Note**
-> Unfortunately several browsers (including Chrome, Safari, and Internet Explorer) do not support ``file://`` XHR requests, and can’t load extra files needed by the HTML (like a ``.wasm`` file, or packaged file data as mentioned lower down). For these browsers you’ll need to serve the files using a local webserver
-> *~ [taken from here](https://emscripten.org/docs/getting_started/Tutorial.html)*
+The project uses [emscripten](https://emscripten.org) to compile the C source to wasm
 
 ### Windows
 
@@ -24,4 +20,3 @@ The project uses [WASM](https://webassembly.org/) for image processing, hence yo
 ```
 ./build.sh
 ```
-
