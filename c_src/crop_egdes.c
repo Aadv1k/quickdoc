@@ -8,6 +8,8 @@
 
 #include <emscripten/emscripten.h>
 
+#include <stdio.h>
+
 #define SOBEL_K 3
 #define THRESHOLD 128
 
@@ -54,20 +56,20 @@ EMSCRIPTEN_KEEPALIVE size_t cv_trim_x_edges(uint8_t* edgeData, uint8_t* original
     return minXIndex;
 }
 
-EMSCRIPTEN_KEEPALIVE void cv_apply_sobel_filter(uint8_t* data, size_t width, size_t height, uint8_t channels) {
-  if (channels != 1)
-    cv_squish_rgba_to_grayscale(data, width, height, channels);
+EMSCRIPTEN_KEEPALIVE uint8_t* cv_apply_sobel_filter_rgba(uint8_t* data, size_t width, size_t height, uint8_t channels) {
+  assert(channels == 4 && "cv_apply_sobel_filter_rgba expects a RGBA image");
 
+  cv_squish_rgba_to_grayscale(data, width, height, channels);
+  
   for (size_t i = 0; i < height; i++) {
     for (size_t j = 0; j < width; j++) {
-
       int sumX = 0, sumY = 0;
 
       for (size_t x = 0; x < SOBEL_K; x++) {
         for (size_t y = 0; y < SOBEL_K; y++) {
           size_t currentIndex = (i + x) * width + y + j;
-          sumX += data[currentIndex] + sobelX[x][y];
-          sumY += data[currentIndex] + sobelY[x][y];
+          sumX += data[currentIndex] * sobelX[x][y];
+          sumY += data[currentIndex] * sobelY[x][y];
         }
       }
 
@@ -76,4 +78,9 @@ EMSCRIPTEN_KEEPALIVE void cv_apply_sobel_filter(uint8_t* data, size_t width, siz
       data[i * width + j] = currentValue;
     }
   }
+
+  cv_expand_grayscale_to_rgba(data, width, height, channels);
+
+  return data;
 }
+

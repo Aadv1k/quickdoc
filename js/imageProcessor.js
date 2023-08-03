@@ -1,5 +1,4 @@
-import OtsuModule from "/wasm/global.js";
-import ResizeModule from "/wasm/resize.js";
+import InitModule from "/wasm/build.js";
 import SelectedFileMap from "/js/SelectedFileMap.js";
 
 const extractPixelDataFromBase64 = (data) => {
@@ -17,20 +16,51 @@ const extractPixelDataFromBase64 = (data) => {
 }
   
 const handleProceedClick = async (event) => {
-  console.log("I was invoked");
-
+  const Module = await InitModule();
   for (const [imageName, base64Image] of SelectedFileMap) {
-    const imgData = extractPixelDataFromBase64(base64Image);
-    console.log(imgData);
+    const { data, width, height } = extractPixelDataFromBase64(base64Image);
+    let channels = 4;
+
+    let imageBytes = new Uint8Array(data.buffer);
+
+    var buffer = Module._malloc(imageBytes.length * imageBytes.BYTES_PER_ELEMENT);
+    Module.HEAPU8.set(imageBytes, buffer);
+
+      /*
+    const cv_apply_sobel_filter_rgba = Module.cwrap(
+        "cv_apply_sobel_filter_rgba", null,
+        ["number", "number", "number", "number"]
+    cv_apply_sobel_filter_rgba(buffer, width, height, channels);
+    */
+
+    Module.ccall("cv_apply_sobel_filter_rgba", null, ["number", "number", "number", "number"], [buffer, width, height, channels]);
+
+    console.log(imageBytes);
+
+    Module._free(buffer);
+  }
+};
+
+
+      /* RENDER IT 
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+
+    canvas.width = width;
+    canvas.height = height;
+
+    context.putImageData(processedImageData, 0, 0);
+
+    document.body.appendChild(canvas);
+      
+      /*******/
 
     // convert to grayscale for better computation
-    // use laplacian to determine the "paper"
+    // use sobel to determine the "paper"
     // -> on detecting a "white pixel group" set all the preceding pixels to black. reverse and do the same
     // rotate the image, EG shift all the valid pixels immediately to the start
     // clean up and resize baby
     // apply thresholding
-  }
-};
 
 
 export default function setupImageProcessor() {
