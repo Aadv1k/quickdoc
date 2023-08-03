@@ -9,9 +9,6 @@
 #define SOBEL_K 3
 #define THRESHOLD 128
 
-#define BLACK 0
-#define WHITE 255
-
 static int sobelX[SOBEL_K][SOBEL_K] = {
   {-1, -2, -1},
   {0, 0, 0},

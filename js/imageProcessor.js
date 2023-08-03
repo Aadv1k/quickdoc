@@ -22,12 +22,16 @@ const handleProceedClick = async (event) => {
     let channels = 4;
 
     let imageBytes = new Uint8Array(data.buffer);
+    const imageSize = width * height * channels;
 
-    var buffer = Module._malloc(imageBytes.length * imageBytes.BYTES_PER_ELEMENT);
+    var buffer = Module._malloc(imageSize);
     Module.HEAPU8.set(imageBytes, buffer);
 
     Module.ccall("cv_parse_image_rgba", null, ["number", "number", "number", "number"], [buffer, width, height, channels]);
     Module._free(buffer);
+
+    let modifiedBytes = Module.HEAPU8.subarray(buffer, buffer + imageSize);
+    imageBytes.set(modifiedBytes);
 
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
