@@ -21,8 +21,8 @@ static int sobelY[SOBEL_K][SOBEL_K] = {
   {-1, 0, 1}
 };
 
-EMSCRIPTEN_KEEPALIVE void cv_apply_sobel_filter_rgba(uint8_t* data, size_t width, size_t height, uint8_t channels) {
-  assert(channels == 1 && "cv_apply_sobel_filter_rgba expects a GRAYSCALE image");
+EMSCRIPTEN_KEEPALIVE void cv_apply_sobel_filter_grayscale(uint8_t* data, size_t width, size_t height, uint8_t channels) {
+  assert(channels == 1 && "cv_apply_sobel_filter_grayscale expects a GRAYSCALE image");
   
   for (size_t i = 0; i < height; i++) {
     for (size_t j = 0; j < width; j++) {
