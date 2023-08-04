@@ -76,6 +76,6 @@ const handleProceedClick = async (event) => {
 export default function setupImageProcessor() {
     const btnProceed = document.getElementById("btnProceed");
 
-    btnProceed.classList.add("btn-disabled");
+    btnProceed.classList.add("btn--disabled");
     btnProceed.addEventListener("click", handleProceedClick);
 }

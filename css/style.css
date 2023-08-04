@@ -1,18 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz@9..40&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,700;0,9..40,900;1,9..40,700;1,9..40,900&display=swap');
 
 :root {
-    --main-bg: #F9F5E7;
-    --tan-100: #F8EAD8;
-    --tan-200: #EDDBC7;
-    --tan-300: #A7727D;
-    --tan-250: #baab9c;
-    --tan-300: #A7727D;
-
-    --brown-200: #3c2a21;
-
-    --font-serif: 'Libre Baskerville', serif;
     --font-sans:  'DM Sans', sans-serif;
+
+    --indigo-100: #191825;
+    --indigo-200: #19191f;
+
+    --gray: #6b7280;
+
+    --blue-100: #865dff;
+
+    --lavender-100: #FFA3FD;
+    --lavender-200: #E384FF;
+
+    --black: #18181b;
 }
 
 * {
@@ -23,26 +24,28 @@
 }
 
 body {
-    width: 95%;
+    width: 90%;
+    min-height: 100vh;
     max-width: 1000px;
     margin: 0 auto;
     padding-block: 1.4rem;
-    background-color: var(--main-bg);
+
+    background-image: linear-gradient(-180deg, var(--indigo-100), var(--indigo-200));
 
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1.5rem;
 
 }
 
 h1,h2,h3 {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-weight: bold;
+    color: white;
 }
 
 h2 {
     font-size: 1.5rem;
-    color: var(--brown-200);
 }
 
 .btn {
@@ -59,7 +62,7 @@ h2 {
 
 .btn--primary {
     transition: background-color 100ms ease;
-    background-color: var(--tan-300);
+    background-color: var(--blue-100);
     padding: .5rem 1.3rem;
     font-size: .9rem;
     color: white;
@@ -84,11 +87,12 @@ h2 {
 .hero h1 {
     font-size: 2.25rem;
     font-style: italic;
+    font-weight: 900;
 }
 
 .hero p {
-    color: var(--brown-200);
     text-align: center;
+    color: var(--gray);
 }
 
 .workspace {
@@ -107,22 +111,22 @@ h2 {
 .image-container {
   display: flex;
   gap: 0.75rem;
-  align-items: center;
-  min-width: 100%;
+  width: 100%;
+  padding-inline: 1rem;
+  padding-block: 1.25rem;
   height: 200px;
   overflow-x: scroll;
-padding-inline: 1rem;
-padding-block: 1.25rem;
 }
 
 .preview {
   position: relative;
 
+  min-width: 33%;
   height: 100%;
-  min-width: 50%;
 
   display: flex;
   gap: 0.5rem;
+  background-color: var(--black);
 }
 
 .preview .thumbnail {
@@ -131,7 +135,8 @@ padding-block: 1.25rem;
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.5; 
+  opacity: 0.5;
+  object-fit: contain;
 }
 
 .preview p {
@@ -160,7 +165,7 @@ padding-block: 1.25rem;
 .file-box {
     width: 100%;
     height: 150px;
-    border: 2px dashed var(--tan-200);
+    border: 2px dashed var(--lavender-200);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -169,6 +174,7 @@ padding-block: 1.25rem;
     border-radius: 1rem;
     cursor: pointer;
     transition: background-color 100ms ease;
+    color: var(--gray);
 }
 
 .file-box input {
@@ -176,16 +182,16 @@ padding-block: 1.25rem;
 }
 
 .file-box--active {
-    border: 2px dashed var(--tan-250);
+    border: 2px dashed var(--lavender-200);
 }
 
 
 @media (hover: hover) {
     .file-box:hover {
-        background-color: var(--tan-100);
+        cursor: pointer;
     }
 
-    .btn-primary:not(.btn-disabled):hover {
+    .btn--primary:not(.btn-disabled):hover {
         background-color: #0f59ac;
     }
 }
@@ -193,6 +199,6 @@ padding-block: 1.25rem;
 
 @media only screen and (min-width: 600px) {
     .preview {
-        min-width: 33%;
+        width: 25%;
     }
 }
