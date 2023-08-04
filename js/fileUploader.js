@@ -1,4 +1,5 @@
 import SelectedFileMap from "./SelectedFileMap.js"
+import ImagePreviewComponent from "./ImagePreviewComponent.js";
 
 const MAX_FILES = 32; // TODO: this number is arbitiary
 
@@ -67,33 +68,13 @@ const handleFileInputChange = async (event) => {
 
 function renderImagePreviews() {
   imageContainer.innerHTML = "";
-
   for (const [imgName, imgData] of SelectedFileMap) {
-    const imagePreviewComponent = document.createElement("div");
-    imagePreviewComponent.classList.add("preview");
-    imagePreviewComponent.setAttribute("data-value", imgName);
-
-    const image = new Image();
-    image.src = imgData;
-    image.classList.add("thumbnail");
-    imagePreviewComponent.appendChild(image);
-
-    const p = document.createElement("p");
-    p.innerText = imgName;
-    imagePreviewComponent.appendChild(p);
-
-    const button = document.createElement("button");
-    button.classList.add("btn");
-    button.classList.add("close");
-    button.innerText = "X";
-    button.addEventListener("click", (e) => {
+    const imgComponent = new ImagePreviewComponent(imgData, imgName, (e) => {
         SelectedFileMap.delete(e.target.parentElement.getAttribute("data-value"));
         e.target.parentElement.remove();
-    })
-    imagePreviewComponent.appendChild(button);
-
-
-    imageContainer.appendChild(imagePreviewComponent);
+        console.log(SelectedFileMap);
+    }, () => {}, false);
+    imageContainer.appendChild(imgComponent);
   }
 }
 

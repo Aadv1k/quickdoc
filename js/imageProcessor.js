@@ -1,10 +1,9 @@
 import InitModule from "../wasm/build.js";
 import SelectedFileMap from "./SelectedFileMap.js";
-import ImagePreviewComponent from "./ImagePreviewComponent";
+import ImagePreviewComponent from "./ImagePreviewComponent.js";
 
 const GRAYSCALE = 1,
       RGBA = 4;
-
 
 const extractPixelDataFromBase64 = (data) => {
     const image = new Image();
@@ -18,6 +17,10 @@ const extractPixelDataFromBase64 = (data) => {
     context.drawImage(image, 0, 0);
 
     return context.getImageData(0, 0, image.width, image.height);
+}
+
+function processImageFromParams() {
+    w
 }
   
 const handleProceedClick = async (event) => {
@@ -61,7 +64,7 @@ const handleProceedClick = async (event) => {
 
     // TODO: derive this automatically
     Module.ccall("cv_apply_threshold", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, GRAYSCALE, 128]);
-    Module.ccall("cv_expand_grayscale_to_rgba", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, buffer, width, height, GRAYSCALEBUFFER]);
+    Module.ccall("cv_expand_grayscale_to_rgba", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, buffer, width, height, GRAYSCALE]);
 
     let modifiedBytes = Module.HEAPU8.subarray(buffer, buffer + imageSize);
     imageBytes.set(modifiedBytes);
@@ -81,12 +84,18 @@ const handleProceedClick = async (event) => {
 
     context.putImageData(processedImageData, 0, 0);
 
-   const imagePreviewComponent = new ImagePreviewComponent(canvas.toDataURL(), width, height, true);
+   const imagePreviewComponent = new ImagePreviewComponent(canvas.toDataURL(), null, (e) => {
+        e.target.parentElement.remove();
+   }, (e) => {
+       const downloadLink = document.createElement('a');
+       downloadLink.href = canvas.toDataURL();
+       downloadLink.download = "image";
+       downloadLink.click();
+       downloadLink.remove();
+   }, true);
     document.getElementById("outputContainer").appendChild(imagePreviewComponent);
   }
 };
-
-
 
 export default function setupImageProcessor() {
     const btnProceed = document.getElementById("btnProceed");

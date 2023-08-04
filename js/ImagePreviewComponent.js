@@ -1,20 +1,18 @@
-export default function createImagePreviewComponent(base64Image, width, height, isDownloadable) {
+export default function createImagePreviewComponent(base64Image, imageName, onDelete, onDownload, isDownloadable) {
     const imagePreviewComponent = document.createElement("div");
     imagePreviewComponent.classList.add("preview");
 
+    imagePreviewComponent.setAttribute("data-value", imageName);
+
     const image = new Image();
     image.src = base64Image;
-    image.width = width;
-    image.height = height;
     image.classList.add("thumbnail");
     imagePreviewComponent.appendChild(image);
 
     const button = document.createElement("button");
     button.classList.add("btn");
     button.innerText = "X";
-    button.addEventListener("click", (e) => {
-        e.target.parentElement.remove();
-    })
+    button.addEventListener("click", onDelete);
     imagePreviewComponent.appendChild(button);
 
     if (isDownloadable) {
@@ -22,13 +20,7 @@ export default function createImagePreviewComponent(base64Image, width, height, 
         downloadButton.classList.add("btn");
         downloadButton.classList.add("download");
         downloadButton.innerText = "DL";
-        downloadButton.addEventListener("click", (e) => {
-            const downloadLink = document.createElement('a');
-            downloadLink.href = canvas.toDataURL();
-            downloadLink.download = "image";
-            downloadLink.click();
-            downloadLink.remove();
-        })
+        downloadButton.addEventListener("click", onDownload);
         imagePreviewComponent.appendChild(downloadButton);
     }
 
