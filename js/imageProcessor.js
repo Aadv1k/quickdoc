@@ -36,12 +36,14 @@ const handleProceedClick = async (event) => {
     let leftEdge = Module.ccall("cv_get_left_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
 
     // TODO: this doesn't work as expected; it ends up either out of bounds or chopping of wayy to much
-    // let rightEdge = Module.ccall("cv_get_right_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
+    let rightEdge = Module.ccall("cv_get_right_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
+     console.log(width, rightEdge);
 
-    width = Module.ccall("cv_crop_x_edge_grayscale_and_get_width", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, leftEdge, width]);
+    width = Module.ccall("cv_crop_x_edge_grayscale_and_get_width", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, leftEdge, rightEdge]);
     imageSize = width * height * channels;
 
-    Module.ccall("cv_expand_grayscale_to_rgba", null, ["number", "number", "number", "number"], [grayscaleBuffer, buffer, width, height, 1]);
+    Module.ccall("cv_apply_threshold", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, 128]);
+    Module.ccall("cv_expand_grayscale_to_rgba", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, buffer, width, height, 1]);
 
     let modifiedBytes = Module.HEAPU8.subarray(buffer, buffer + imageSize);
     imageBytes.set(modifiedBytes);
