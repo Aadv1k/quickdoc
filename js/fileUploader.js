@@ -1,4 +1,4 @@
-import SelectedFileMap from "/js/SelectedFileMap.js"
+import SelectedFileMap from "./SelectedFileMap.js"
 
 const MAX_FILES = 32; // TODO: this number is arbitiary
 

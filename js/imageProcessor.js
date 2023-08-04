@@ -1,5 +1,5 @@
-import InitModule from "/wasm/build.js";
-import SelectedFileMap from "/js/SelectedFileMap.js";
+import InitModule from "../wasm/build.js";
+import SelectedFileMap from "./SelectedFileMap.js";
 
 const extractPixelDataFromBase64 = (data) => {
     const image = new Image();
