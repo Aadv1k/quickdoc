@@ -8,6 +8,6 @@
 #define BLACK 0
 #define WHITE 255
 
-EMSCRIPTEN_KEEPALIVE void cv_apply_sobel_filter_grayscale(uint8_t* data, size_t width, size_t height, uint8_t channels);
+EMSCRIPTEN_KEEPALIVE void cv_apply_sobel_filter_grayscale(uint8_t* data, uint8_t* newData, size_t width, size_t height, uint8_t channels);
 
 #endif

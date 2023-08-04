@@ -11,23 +11,24 @@
 #include <stdio.h>
 
 #define WHITE 255
+#define BLACK 0
 
 EMSCRIPTEN_KEEPALIVE
 size_t cv_get_left_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
     assert(channels == 1 && "cv_get_left_edge expects GRAYSCALE image");
 
-    size_t minIndex = width - 1; // Initialize with the maximum possible value (rightmost index)
+    size_t minIndex = width - 1;
 
-    for (size_t i = 0; i < height; i++) {
-        for (size_t j = 0; j < width; j++) {
+    for (size_t i = 3; i < height - 3; i++) {
+        for (size_t j = 3; j < width - 3; j++) {
             size_t currentIndex = (i * width) + j;
-            if (edgeData[currentIndex] == WHITE && edgeData[currentIndex + 1] == WHITE) {
-                if (j < minIndex) {
-                    minIndex = j; // Update minIndex if we find a smaller index
-                }
+            assert(edgeData[currentIndex] == WHITE || edgeData[currentIndex] == BLACK);
+            if (edgeData[currentIndex] == WHITE) {
+              if (j < minIndex) minIndex = j;
             }
         }
     }
+
     return minIndex;
 }
 
