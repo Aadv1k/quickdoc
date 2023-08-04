@@ -84,13 +84,14 @@ function renderImagePreviews() {
 
     const button = document.createElement("button");
     button.classList.add("btn");
+    button.classList.add("close");
     button.innerText = "X";
     button.addEventListener("click", (e) => {
         SelectedFileMap.delete(e.target.parentElement.getAttribute("data-value"));
         e.target.parentElement.remove();
     })
-
     imagePreviewComponent.appendChild(button);
+
 
     imageContainer.appendChild(imagePreviewComponent);
   }

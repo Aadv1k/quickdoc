@@ -150,10 +150,8 @@ h2 {
   word-wrap: anywhere
 }
 
-.preview button {
+.preview .btn {
   position: absolute;
-  top: 5px;
-  right: 5px;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.5);
   width: 1.5rem;
@@ -161,6 +159,15 @@ h2 {
   font-size: .8rem;
 }
 
+.close {
+  top: 5px;
+  right: 5px;
+}
+
+.download {
+  bottom: 5px;
+  right: 5px;
+}
 
 .file-box {
     width: 100%;

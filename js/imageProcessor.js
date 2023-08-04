@@ -47,7 +47,7 @@ const handleProceedClick = async (event) => {
     imageSize = width * height * channels;
 
     // TODO: derive this automatically
-    Module.ccall("cv_apply_threshold", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, 50]);
+    Module.ccall("cv_apply_threshold", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, 128]);
     Module.ccall("cv_expand_grayscale_to_rgba", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, buffer, width, height, 1]);
 
     let modifiedBytes = Module.HEAPU8.subarray(buffer, buffer + imageSize);
@@ -78,10 +78,6 @@ const handleProceedClick = async (event) => {
     image.classList.add("thumbnail");
     imagePreviewComponent.appendChild(image);
 
-    const p = document.createElement("p");
-    p.innerText = "output";
-    imagePreviewComponent.appendChild(p);
-
     const button = document.createElement("button");
     button.classList.add("btn");
     button.innerText = "X";
@@ -89,6 +85,20 @@ const handleProceedClick = async (event) => {
         e.target.parentElement.remove();
     })
     imagePreviewComponent.appendChild(button);
+
+    const downloadButton = document.createElement("button");
+    downloadButton.classList.add("btn");
+    downloadButton.classList.add("download");
+    downloadButton.innerText = "DL";
+    downloadButton.addEventListener("click", (e) => {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = canvas.toDataURL();
+        downloadLink.download = "image";
+        downloadLink.click();
+        downloadLink.remove();
+    })
+
+    imagePreviewComponent.appendChild(downloadButton);
 
     document.getElementById("outputContainer").appendChild(imagePreviewComponent);
   }
