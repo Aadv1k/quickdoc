@@ -68,7 +68,29 @@ const handleProceedClick = async (event) => {
 
     context.putImageData(processedImageData, 0, 0);
 
-    document.body.appendChild(canvas);
+    const imagePreviewComponent = document.createElement("div");
+    imagePreviewComponent.classList.add("preview");
+
+    const image = new Image();
+    image.src = canvas.toDataURL();
+    image.width = width;
+    image.height = height;
+    image.classList.add("thumbnail");
+    imagePreviewComponent.appendChild(image);
+
+    const p = document.createElement("p");
+    p.innerText = "output";
+    imagePreviewComponent.appendChild(p);
+
+    const button = document.createElement("button");
+    button.classList.add("btn");
+    button.innerText = "X";
+    button.addEventListener("click", (e) => {
+        e.target.parentElement.remove();
+    })
+    imagePreviewComponent.appendChild(button);
+
+    document.getElementById("outputContainer").appendChild(imagePreviewComponent);
   }
 };
 
