@@ -8,31 +8,44 @@
 
 #include <emscripten/emscripten.h>
 
-#define RGBA 4
+#include <stdio.h>
 
-EMSCRIPTEN_KEEPALIVE
-void cv_parse_image_rgba(uint8_t* data, size_t width, size_t height, uint8_t channels) {
+#define RGBA 4
+#define GRAYSCALE 1
+
+
+EMSCRIPTEN_KEEPALIVE size_t* cv_parse_image_rgba(uint8_t* data, size_t width, size_t height, uint8_t channels) {
   assert(channels == 4 && "cv_parse_image_rgba only accepts RGBA");
   
   size_t grayscaleSize = sizeof(uint8_t) * width * height;
-  
   uint8_t* grayscaleData = (uint8_t*)malloc(grayscaleSize);
-  
-  cv_squish_rgba_to_grayscale(data, grayscaleData, width, height, channels);
 
+  cv_squish_rgba_to_grayscale(data, grayscaleData, width, height, RGBA);
+  cv_apply_sobel_filter_grayscale(grayscaleData, width, height, GRAYSCALE);
 
-  cv_apply_sobel_filter_grayscale(grayscaleData, width, height, 1);
+  const size_t leftEdge = cv_get_left_edge(grayscaleData, width, height, GRAYSCALE);
 
-  size_t rgba = 4;
-  size_t originalSize = sizeof(uint8_t) * width * height * rgba;
+  printf("DEBUG %lu\n", leftEdge);
+  printf("DEBUG %lu\n", grayscaleSize);
+
+  printf("DEBUG %lu\n", width);
+
+  cv_crop_x_edge_grayscale(grayscaleData, width, height, GRAYSCALE, leftEdge);
+  width -= leftEdge;
+
+  printf("DEBUG %lu\n", width);
+
+  size_t originalSize = sizeof(uint8_t) * width * height * RGBA;
+
+  printf("DEBUG %lu\n", originalSize);
+
+  // Convert grayscale data back to RGBA and copy to newData
   uint8_t* newData = (uint8_t*)malloc(originalSize);
-
-  cv_expand_grayscale_to_rgba(grayscaleData, newData, width, height, 1);
-
+  cv_expand_grayscale_to_rgba(grayscaleData, newData, width, height, GRAYSCALE);
 
   memcpy(data, newData, originalSize);
 
-  // Free the allocated memory
   free(grayscaleData);
   free(newData);
+  return {width, height, RGBA};
 }
