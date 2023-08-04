@@ -27,11 +27,14 @@ const handleProceedClick = async (event) => {
     var buffer = Module._malloc(imageSize);
     Module.HEAPU8.set(imageBytes, buffer);
 
-    Module.ccall("cv_parse_image_rgba", null, ["number", "number", "number", "number"], [buffer, width, height, channels]);
-    Module._free(buffer);
+    const newSize = Module.ccall("cv_parse_image_rgba", "number", ["number", "number", "number", "number"], [buffer, width, height, channels]);
 
-    let modifiedBytes = Module.HEAPU8.subarray(buffer, buffer + imageSize);
+      console.log(newSize);
+
+    let modifiedBytes = Module.HEAPU8.subarray(buffer, buffer + imageBytes);
     imageBytes.set(modifiedBytes);
+
+
 
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
