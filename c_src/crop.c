@@ -16,7 +16,6 @@
 EMSCRIPTEN_KEEPALIVE
 size_t cv_get_left_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
     assert(channels == 1 && "cv_get_left_edge expects GRAYSCALE image");
-
     size_t minIndex = width - 1;
 
     for (size_t i = 3; i < height - 3; i++) {
@@ -36,23 +35,22 @@ EMSCRIPTEN_KEEPALIVE
 size_t cv_get_right_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
     assert(channels == 1 && "cv_get_right_edge expects GRAYSCALE image");
 
-    for (size_t i = 0; i < height; i++) {
-        for (size_t j = width - 1; j > 0; j--) {
+    size_t maxIndex = 0;
+
+    for (size_t i = 3; i < height - 3; i++) {
+        for (size_t j = width - 1; j >= 3; j--) { // Start from width - 1 (rightmost edge) and go towards 3
             size_t currentIndex = (i * width) + j;
-            if (edgeData[currentIndex] == WHITE && edgeData[currentIndex - 1] == WHITE)
-                return j;
+            if (edgeData[currentIndex] == WHITE) {
+                if (j > maxIndex) maxIndex = j;
+            }
         }
     }
-    return width - 1;
-}
 
+    return maxIndex;
+}
 
 EMSCRIPTEN_KEEPALIVE
 size_t cv_crop_x_edge_grayscale_and_get_width(uint8_t* data, size_t width, size_t height, uint8_t channels, size_t leftEdge, size_t rightEdge) {
-    //size_t croppedWidth = width - ((leftEdge >= width/2 ? 0 : leftEdge) + (rightEdge >= width/2 ? width - 1 : rightEdge));
-
-    rightEdge = width;
-
     size_t croppedWidth = width - leftEdge;
     size_t newDataSize = sizeof(uint8_t) * croppedWidth * height * channels;
     uint8_t* newData = (uint8_t*)malloc(newDataSize);
