@@ -12,20 +12,22 @@
 
 EMSCRIPTEN_KEEPALIVE
 size_t cv_get_top_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
-    size_t minIndex = height; // Initialize to the bottommost row (out of image bounds)
+    size_t minIndex = height;
 
-    for (size_t i = 0; i < height; i++) {
-        for (size_t j = 0; j < width; j++) {
+    for (size_t i = 3; i < height - 3; i++) {
+        for (size_t j = 3; j < width - 3; j++) {
             size_t currentIndex = (i * width + j) * channels;
-            if (edgeData[currentIndex] == WHITE) {
+            if (
+                edgeData[currentIndex] == WHITE
+                && edgeData[currentIndex + 1] == WHITE
+                && edgeData[currentIndex + 2] == WHITE) {
                 if (i < minIndex) {
                     minIndex = i;
                 }
-                break; // Move to the next row after finding the first white pixel
+                break;
             }
         }
     }
-
     return minIndex;
 }
 
@@ -35,7 +37,7 @@ size_t cv_get_bottom_edge(uint8_t* edgeData, size_t width, size_t height, uint8_
 
     for (size_t i = height - 1; i >= 0; i--) {
         for (size_t j = 0; j < width; j++) {
-            size_t currentIndex = (i * width + j) * channels;
+            size_t currentIndex = (i * width) + j;
             if (edgeData[currentIndex] == WHITE) {
                 if (i > maxIndex) {
                     maxIndex = i;

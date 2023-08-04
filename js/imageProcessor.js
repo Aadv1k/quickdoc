@@ -34,19 +34,20 @@ const handleProceedClick = async (event) => {
     Module.ccall("cv_apply_sobel_filter_grayscale", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, sobelEdgeBuffer, width, height, 1])
 
     let leftEdge = Module.ccall("cv_get_left_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
-    let rightEdge = Module.ccall("cv_get_right_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
-
-
-    let topEdge = Module.ccall("cv_get_top_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
-//    let bottomEdge = Module.ccall("cv_get_bottom_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
+    let rightEdge = Module.ccall("cv_get_right_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]) - 6;
 
     width = Module.ccall("cv_crop_x_edge_grayscale_and_get_width", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, leftEdge, rightEdge]);
+
+    let topEdge = Module.ccall("cv_get_top_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
+    //let bottomEdge = Module.ccall("cv_get_bottom_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
+      //console.log(bottomEdge);
 
     height = Module.ccall("cv_crop_y_edge_grayscale_and_get_height", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, topEdge, height]);
 
     imageSize = width * height * channels;
 
-    Module.ccall("cv_apply_threshold", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, 128]);
+    // TODO: derive this automatically
+    Module.ccall("cv_apply_threshold", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, 50]);
     Module.ccall("cv_expand_grayscale_to_rgba", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, buffer, width, height, 1]);
 
     let modifiedBytes = Module.HEAPU8.subarray(buffer, buffer + imageSize);
