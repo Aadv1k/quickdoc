@@ -58,10 +58,23 @@ size_t cv_get_left_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t 
     for (size_t i = 3; i < height - 3; i++) {
         for (size_t j = 3; j < width - 3; j++) {
             size_t currentIndex = (i * width) + j;
-            assert(edgeData[currentIndex] == WHITE || edgeData[currentIndex] == BLACK);
-            if (edgeData[currentIndex] == WHITE) {
+
+            /*
+
+            if (
+                (edgeData[currentIndex] == WHITE && edgeData[currentIndex + 1] == WHITE) &&
+                (edgeData[(i - 1) * width + j] == WHITE && edgeData[(i - 2) * width + j] == WHITE && edgeData[(i - 3) * width + j] == WHITE) &&
+                (edgeData[(i + 1) * width + j] == WHITE && edgeData[(i + 2) * width + j] == WHITE && edgeData[(i + 3) * width + j] == WHITE)
+                ) {
               if (j < minIndex) minIndex = j;
+            } */
+
+            if (edgeData[currentIndex] >= 200 && edgeData[currentIndex] < 230) {
+                if (j < minIndex) {
+                    minIndex = j;
+                }
             }
+
         }
     }
 
@@ -80,8 +93,9 @@ size_t cv_get_right_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t
     for (size_t i = rowMargin; i < height - rowMargin; i++) {
         for (size_t j = width - colMargin - 1; j >= colMargin; j--) {
             size_t currentIndex = (i * width) + j;
-            assert(edgeData[currentIndex] == WHITE || edgeData[currentIndex] == BLACK);
-            if (edgeData[currentIndex] == WHITE) {
+
+
+            if (edgeData[currentIndex] >= 200) {
                 if (j > maxIndex) {
                     maxIndex = j;
                 }

@@ -33,8 +33,11 @@ const handleProceedClick = async (event) => {
     Module.HEAPU8.set(Module.HEAPU8.subarray(grayscaleBuffer, grayscaleBuffer + width * height), sobelEdgeBuffer);
     Module.ccall("cv_apply_sobel_filter_grayscale", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, sobelEdgeBuffer, width, height, 1])
 
-    let leftEdge = Module.ccall("cv_get_left_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
-    let rightEdge = Module.ccall("cv_get_right_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]) - 6;
+    //let leftEdge = Module.ccall("cv_get_left_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
+    let leftEdge = Module.ccall("cv_get_left_edge", "number", ["number", "number", "number", "number"], [grayscaleBuffer, width, height, 1]);
+    ///let rightEdge = Module.ccall("cv_get_right_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]) - 6;
+    let rightEdge = Module.ccall("cv_get_right_edge", "number", ["number", "number", "number", "number"], [grayscaleBuffer, width, height, 1])
+
 
     width = Module.ccall("cv_crop_x_edge_grayscale_and_get_width", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, leftEdge, rightEdge]);
 
