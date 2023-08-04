@@ -11,6 +11,44 @@
 #include <stdio.h>
 
 EMSCRIPTEN_KEEPALIVE
+size_t cv_get_top_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
+    size_t minIndex = height; // Initialize to the bottommost row (out of image bounds)
+
+    for (size_t i = 0; i < height; i++) {
+        for (size_t j = 0; j < width; j++) {
+            size_t currentIndex = (i * width + j) * channels;
+            if (edgeData[currentIndex] == WHITE) {
+                if (i < minIndex) {
+                    minIndex = i;
+                }
+                break; // Move to the next row after finding the first white pixel
+            }
+        }
+    }
+
+    return minIndex;
+}
+
+EMSCRIPTEN_KEEPALIVE
+size_t cv_get_bottom_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
+    size_t maxIndex = 0; // Initialize to the topmost row (out of image bounds)
+
+    for (size_t i = height - 1; i >= 0; i--) {
+        for (size_t j = 0; j < width; j++) {
+            size_t currentIndex = (i * width + j) * channels;
+            if (edgeData[currentIndex] == WHITE) {
+                if (i > maxIndex) {
+                    maxIndex = i;
+                }
+                break; // Move to the previous row after finding the first white pixel
+            }
+        }
+    }
+
+    return maxIndex;
+}
+
+EMSCRIPTEN_KEEPALIVE
 size_t cv_get_left_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
     assert(channels == 1 && "cv_get_left_edge expects GRAYSCALE image");
     size_t minIndex = width - 1;

@@ -34,12 +34,16 @@ const handleProceedClick = async (event) => {
     Module.ccall("cv_apply_sobel_filter_grayscale", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, sobelEdgeBuffer, width, height, 1])
 
     let leftEdge = Module.ccall("cv_get_left_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
-
-    // TODO: this doesn't work as expected; it ends up either out of bounds or chopping of wayy to much
     let rightEdge = Module.ccall("cv_get_right_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
-     console.log(width, rightEdge);
+
+
+    let topEdge = Module.ccall("cv_get_top_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
+//    let bottomEdge = Module.ccall("cv_get_bottom_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, 1]);
 
     width = Module.ccall("cv_crop_x_edge_grayscale_and_get_width", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, leftEdge, rightEdge]);
+
+    height = Module.ccall("cv_crop_y_edge_grayscale_and_get_height", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, topEdge, height]);
+
     imageSize = width * height * channels;
 
     Module.ccall("cv_apply_threshold", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, 1, 128]);
