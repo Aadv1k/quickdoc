@@ -6,7 +6,8 @@
 #include <stdlib.h>
 
 EMSCRIPTEN_KEEPALIVE size_t cv_get_left_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels);
+EMSCRIPTEN_KEEPALIVE size_t cv_get_right_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels);
 
-EMSCRIPTEN_KEEPALIVE void cv_crop_x_edge_grayscale(uint8_t* data, size_t width, size_t height, uint8_t channels, const size_t leftEdge);
+EMSCRIPTEN_KEEPALIVE void cv_crop_x_edge_grayscale(uint8_t* data, size_t width, size_t height, uint8_t channels, const size_t leftEdge, const size_t rightEdge);
 
 #endif

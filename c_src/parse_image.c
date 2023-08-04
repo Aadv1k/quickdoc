@@ -1,3 +1,4 @@
+/*
 #include "utils.h"
 #include "sobel.h"
 #include "crop.h"
@@ -14,7 +15,7 @@
 #define GRAYSCALE 1
 
 
-EMSCRIPTEN_KEEPALIVE size_t* cv_parse_image_rgba(uint8_t* data, size_t width, size_t height, uint8_t channels) {
+EMSCRIPTEN_KEEPALIVE void cv_parse_image_rgba(uint8_t* data, size_t width, size_t height, uint8_t channels) {
   assert(channels == 4 && "cv_parse_image_rgba only accepts RGBA");
   
   size_t grayscaleSize = sizeof(uint8_t) * width * height;
@@ -47,5 +48,6 @@ EMSCRIPTEN_KEEPALIVE size_t* cv_parse_image_rgba(uint8_t* data, size_t width, si
 
   free(grayscaleData);
   free(newData);
-  return {width, height, RGBA};
+//  return {width, height, RGBA};
 }
+*/
