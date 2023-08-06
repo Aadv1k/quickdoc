@@ -16,12 +16,21 @@ The project uses [emscripten](https://emscripten.org) to compile the C source to
 
 ### Windows
 
-```
-./build.bat
+```console
+.\build.bat
 ```
 
 ### Unix
 
-```
+```console
 ./build.sh
+```
+
+## Development
+
+For testing, you can build the processing for the image as a CLI
+
+```console
+.\build.bat CLI
+.\wasm\main.exe
 ```

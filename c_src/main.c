@@ -35,8 +35,9 @@ int main(int argc, char **argv) {
   uint8_t* newData = (uint8_t*)malloc(sizeof(uint8_t) * width * height * channels);
 
   cv_squish_rgba_to_grayscale(data, newData, width, height, channels);
+  channels = 1;
 
-  if (stbi_write_jpg(output_file, width , height, channels, newData, 0) != 0) {
+  if (stbi_write_jpg(output_file, width , height, channels, newData, 0) == 0) {
     fprintf(stderr, "Error: unable to write %s", output_file);
   }
 
