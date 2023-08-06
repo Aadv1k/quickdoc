@@ -2,7 +2,6 @@
 #include "sobel.h"
 
 #include <stdint.h>
-#include <emscripten/emscripten.h>
 #include <stdlib.h>
 
 #include <assert.h>
@@ -10,7 +9,7 @@
 #include <math.h>
 #include <stdio.h>
 
-EMSCRIPTEN_KEEPALIVE
+EXPORT_FN
 size_t cv_get_top_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
     size_t minIndex = height;
 
@@ -31,11 +30,12 @@ size_t cv_get_top_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t c
     return minIndex;
 }
 
-EMSCRIPTEN_KEEPALIVE
+EXPORT_FN
 size_t cv_get_bottom_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
+    (void)channels;
     size_t maxIndex = 0; // Initialize to the topmost row (out of image bounds)
 
-    for (size_t i = height - 1; i >= 0; i--) {
+    for (size_t i = height - 1; i != 0; i--) {
         for (size_t j = 0; j < width; j++) {
             size_t currentIndex = (i * width) + j;
             if (edgeData[currentIndex] == WHITE) {
@@ -50,7 +50,7 @@ size_t cv_get_bottom_edge(uint8_t* edgeData, size_t width, size_t height, uint8_
     return maxIndex;
 }
 
-EMSCRIPTEN_KEEPALIVE
+EXPORT_FN
 size_t cv_get_left_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
     assert(channels == 1 && "cv_get_left_edge expects GRAYSCALE image");
     size_t minIndex = width - 1;
@@ -81,7 +81,7 @@ size_t cv_get_left_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t 
     return minIndex;
 }
 
-EMSCRIPTEN_KEEPALIVE
+EXPORT_FN
 size_t cv_get_right_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
     assert(channels == 1 && "cv_get_right_edge expects GRAYSCALE image");
 
@@ -105,7 +105,7 @@ size_t cv_get_right_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t
     return maxIndex;
 }
 
-EMSCRIPTEN_KEEPALIVE
+EXPORT_FN
 size_t cv_crop_x_edge_grayscale_and_get_width(uint8_t* data, size_t width, size_t height, uint8_t channels, size_t leftEdge, size_t rightEdge) {
     size_t croppedWidth = rightEdge - leftEdge;
     size_t croppedHeight = height;
@@ -125,8 +125,9 @@ size_t cv_crop_x_edge_grayscale_and_get_width(uint8_t* data, size_t width, size_
     return croppedWidth;
 }
 
-EMSCRIPTEN_KEEPALIVE
+EXPORT_FN
 size_t cv_crop_y_edge_grayscale_and_get_height(uint8_t* data, size_t width, size_t height, uint8_t channels, size_t topEdge, size_t bottomEdge) {
+  (void)height;
     size_t croppedHeight = bottomEdge - topEdge;
     size_t croppedWidth = width * channels;
     size_t newDataSize = sizeof(uint8_t) * croppedHeight * croppedWidth;

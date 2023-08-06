@@ -1,6 +1,7 @@
 #include "utils.h"
 
-#include <emscripten/emscripten.h>
+
+
 #include <stdint.h>
 #include <stddef.h>
 #include <assert.h>
@@ -9,8 +10,8 @@
 
 #include <stdio.h>
 
-EMSCRIPTEN_KEEPALIVE void cv_squish_rgba_to_grayscale(uint8_t* data, uint8_t* newData, size_t width, size_t height, uint8_t channels) {
-    for (int i = 0, j = 0; i < width * height * channels; i += channels, j++) {
+EXPORT_FN void cv_squish_rgba_to_grayscale(uint8_t* data, uint8_t* newData, size_t width, size_t height, uint8_t channels) {
+    for (size_t i = 0, j = 0; i < width * height * channels; i += channels, j++) {
         const uint8_t R = data[i],
                       G = data[i + 1],
                       B = data[i + 2];
@@ -20,7 +21,7 @@ EMSCRIPTEN_KEEPALIVE void cv_squish_rgba_to_grayscale(uint8_t* data, uint8_t* ne
 }
 
 
-EMSCRIPTEN_KEEPALIVE void cv_expand_grayscale_to_rgba(uint8_t* data, uint8_t* newData, size_t width, size_t height, uint8_t channels) {
+EXPORT_FN void cv_expand_grayscale_to_rgba(uint8_t* data, uint8_t* newData, size_t width, size_t height, uint8_t channels) {
   assert(channels == 1 && "cv_expand_grayscale_to_rgba expects a grayscale image");
 
   const uint8_t rgba = 4;
