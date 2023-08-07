@@ -59,22 +59,13 @@ size_t cv_get_left_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t 
         for (size_t j = 3; j < width - 3; j++) {
             size_t currentIndex = (i * width) + j;
 
-            /*
-
             if (
                 (edgeData[currentIndex] == WHITE && edgeData[currentIndex + 1] == WHITE) &&
                 (edgeData[(i - 1) * width + j] == WHITE && edgeData[(i - 2) * width + j] == WHITE && edgeData[(i - 3) * width + j] == WHITE) &&
                 (edgeData[(i + 1) * width + j] == WHITE && edgeData[(i + 2) * width + j] == WHITE && edgeData[(i + 3) * width + j] == WHITE)
                 ) {
               if (j < minIndex) minIndex = j;
-            } */
-
-            if (edgeData[currentIndex] >= 200 && edgeData[currentIndex] < 230) {
-                if (j < minIndex) {
-                    minIndex = j;
-                }
             }
-
         }
     }
 
@@ -107,16 +98,17 @@ size_t cv_get_right_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t
 
 EXPORT_FN
 size_t cv_crop_x_edge_grayscale_and_get_width(uint8_t* data, size_t width, size_t height, uint8_t channels, size_t leftEdge, size_t rightEdge) {
-    size_t croppedWidth = rightEdge - leftEdge;
-    size_t croppedHeight = height;
-    size_t newDataSize = sizeof(uint8_t) * croppedWidth * croppedHeight * channels;
+    if (leftEdge > width / 2) leftEdge = width / 2;
+    if (rightEdge > width / 2) rightEdge = 0;
+
+    size_t croppedWidth = width - (leftEdge + rightEdge);
+    size_t newDataSize = sizeof(uint8_t) * croppedWidth * height * channels;
     uint8_t* newData = (uint8_t*)malloc(newDataSize);
 
-    for (size_t i = 0; i < croppedHeight; i++) {
-        size_t currentIndex = i * width * channels + leftEdge * channels;
-        size_t newIndex = i * croppedWidth * channels;
-
-        memcpy(newData + newIndex, data + currentIndex, croppedWidth * channels);
+    for (size_t i = 0; i < height; i++) {
+        for (size_t j = leftEdge, k = 0; j < width - rightEdge; j++, k++) {
+            newData[i * croppedWidth + k] = data[i * width + j];
+        }
     }
 
     memcpy(data, newData, newDataSize);
@@ -127,7 +119,7 @@ size_t cv_crop_x_edge_grayscale_and_get_width(uint8_t* data, size_t width, size_
 
 EXPORT_FN
 size_t cv_crop_y_edge_grayscale_and_get_height(uint8_t* data, size_t width, size_t height, uint8_t channels, size_t topEdge, size_t bottomEdge) {
-  (void)height;
+    (void)height;
     size_t croppedHeight = bottomEdge - topEdge;
     size_t croppedWidth = width * channels;
     size_t newDataSize = sizeof(uint8_t) * croppedHeight * croppedWidth;

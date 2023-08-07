@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 
-#define GRAY_1 17
+#define GRAY_1 33
 
 EXPORT_FN
 void cv_apply_threshold(uint8_t* data, size_t width, size_t height, uint8_t channels, uint8_t threshold) {
