@@ -14,9 +14,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Emscripten
-        uses: Anadian/setup-emscripten@v1
+        uses: lovasoa/setup-emscripten@master
         with:
-          version: latest # Specify the Emscripten version you need
+          emscripten-version: latest
 
       - name: Build using Makefile and EMCC
         run: |
