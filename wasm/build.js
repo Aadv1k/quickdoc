@@ -1430,6 +1430,10 @@ var _cv_squish_rgba_to_grayscale = Module["_cv_squish_rgba_to_grayscale"] = crea
 /** @type {function(...*):?} */
 var _cv_expand_grayscale_to_rgba = Module["_cv_expand_grayscale_to_rgba"] = createExportWrapper("cv_expand_grayscale_to_rgba");
 /** @type {function(...*):?} */
+var _malloc = Module["_malloc"] = createExportWrapper("malloc");
+/** @type {function(...*):?} */
+var _free = Module["_free"] = createExportWrapper("free");
+/** @type {function(...*):?} */
 var _cv_apply_threshold = Module["_cv_apply_threshold"] = createExportWrapper("cv_apply_threshold");
 /** @type {function(...*):?} */
 var _cv_get_top_edge = Module["_cv_get_top_edge"] = createExportWrapper("cv_get_top_edge");
@@ -1441,10 +1445,6 @@ var _cv_get_left_edge = Module["_cv_get_left_edge"] = createExportWrapper("cv_ge
 var _cv_get_right_edge = Module["_cv_get_right_edge"] = createExportWrapper("cv_get_right_edge");
 /** @type {function(...*):?} */
 var _cv_crop_x_edge_grayscale_and_get_width = Module["_cv_crop_x_edge_grayscale_and_get_width"] = createExportWrapper("cv_crop_x_edge_grayscale_and_get_width");
-/** @type {function(...*):?} */
-var _malloc = Module["_malloc"] = createExportWrapper("malloc");
-/** @type {function(...*):?} */
-var _free = Module["_free"] = createExportWrapper("free");
 /** @type {function(...*):?} */
 var _cv_crop_y_edge_grayscale_and_get_height = Module["_cv_crop_y_edge_grayscale_and_get_height"] = createExportWrapper("cv_crop_y_edge_grayscale_and_get_height");
 /** @type {function(...*):?} */

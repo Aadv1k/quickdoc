@@ -19,10 +19,6 @@ const extractPixelDataFromBase64 = (data) => {
     return context.getImageData(0, 0, image.width, image.height);
 }
 
-function processImageFromParams() {
-    w
-}
-  
 const handleProceedClick = async (event) => {
   const Module = await InitModule();
 
@@ -40,59 +36,45 @@ const handleProceedClick = async (event) => {
     var buffer = Module._malloc(imageSize);
     Module.HEAPU8.set(imageBytes, buffer);
 
-    var grayscaleBuffer = Module._malloc(width * height),
-        sobelEdgeBuffer = Module._malloc(width * height);
+    Module.ccall("cv_squish_rgba_to_grayscale", null, ["number", "number", "number", "number"], [buffer, width, height, channels]);
+    channels = 1;
 
-    copyBuffer(sobelEdgeBuffer, grayscaleBuffer, width * height);
+    var copiedBuffer = Module._malloc(imageSize);
+    copyBuffer(copiedBuffer, buffer, imageSize);
 
-    Module.ccall("cv_squish_rgba_to_grayscale", "number", ["number", "number", "number", "number", "number"], [buffer, grayscaleBuffer, width, height, RGBA]);
-    Module.ccall("cv_apply_sobel_filter_grayscale", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, sobelEdgeBuffer, width, height, GRAYSCALE])
+    Module.ccall("cv_apply_sobel_filter_grayscale", null, ["number", "number", "number", "number"], [copiedBuffer, width, height, channels]);
 
-    let leftEdge = Module.ccall("cv_get_left_edge", "number", ["number", "number", "number", "number"], [grayscaleBuffer, width, height, GRAYSCALE]);
-    let rightEdge = Module.ccall("cv_get_right_edge", "number", ["number", "number", "number", "number"], [grayscaleBuffer, width, height, GRAYSCALE])
-    width = Module.ccall(
-        "cv_crop_x_edge_grayscale_and_get_width",
-        null,
-        ["number", "number", "number", "number", "number"],
-        [grayscaleBuffer, width, height, GRAYSCALE, leftEdge, rightEdge]
-    );
+    let leftEdge = Module.ccall("cv_get_left_edge", "number", ["number", "number", "number", "number"], [copiedBuffer, width, height, channels]);
+    let rightEdge = Module.ccall("cv_get_right_edge", "number", ["number", "number", "number", "number"], [copiedBuffer, width, height, channels]);
+    width = Module.ccall("cv_crop_x_edge_grayscale_and_get_width", "number", ["number", "number", "number", "number", "number", "number", "number"], [buffer, width, height, channels, leftEdge, rightEdge]);
 
-    let topEdge = Module.ccall("cv_get_top_edge", "number", ["number", "number", "number", "number"], [sobelEdgeBuffer, width, height, GRAYSCALE]);
-    height = Module.ccall("cv_crop_y_edge_grayscale_and_get_height", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, GRAYSCALE, topEdge, height]);
-
-    imageSize = width * height * channels;
-
-    // TODO: derive this automatically
-    Module.ccall("cv_apply_threshold", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, width, height, GRAYSCALE, 128]);
-    Module.ccall("cv_expand_grayscale_to_rgba", null, ["number", "number", "number", "number", "number"], [grayscaleBuffer, buffer, width, height, GRAYSCALE]);
-
-    let modifiedBytes = Module.HEAPU8.subarray(buffer, buffer + imageSize);
-    imageBytes.set(modifiedBytes);
-    imageBytes = imageBytes.subarray(0, imageSize);
+    Module.ccall("cv_expand_grayscale_to_rgba", null, ["number", "number", "number", "number"], [buffer, width, height, channels]);
 
     Module._free(buffer);
-    Module._free(grayscaleBuffer);
-    Module._free(sobelEdgeBuffer);
+    Module._free(copiedBuffer);
 
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
 
-    const processedImageData = new ImageData(new Uint8ClampedArray(imageBytes), width, height);
+    imageSize = width * height * 4;
+
+    const uint8ClampedArray = new Uint8ClampedArray(Module.HEAPU8.subarray(buffer, buffer + imageSize));
+    const processedImageData = new ImageData(uint8ClampedArray, width, height);
 
     canvas.width = width;
     canvas.height = height;
 
     context.putImageData(processedImageData, 0, 0);
 
-   const imagePreviewComponent = new ImagePreviewComponent(canvas.toDataURL(), null, (e) => {
-        e.target.parentElement.remove();
-   }, (e) => {
-       const downloadLink = document.createElement('a');
-       downloadLink.href = canvas.toDataURL();
-       downloadLink.download = "image";
-       downloadLink.click();
-       downloadLink.remove();
-   }, true);
+    const imagePreviewComponent = new ImagePreviewComponent(canvas.toDataURL(), null, (e) => {
+      e.target.parentElement.remove();
+    }, (e) => {
+      const downloadLink = document.createElement('a');
+      downloadLink.href = canvas.toDataURL();
+      downloadLink.download = "image";
+      downloadLink.click();
+      downloadLink.remove();
+    }, true);
     document.getElementById("outputContainer").appendChild(imagePreviewComponent);
   }
 };

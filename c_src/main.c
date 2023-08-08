@@ -52,6 +52,7 @@ int main(int argc, char **argv) {
 
   cv_apply_threshold(data, width, height, 1, THRESHOLD);
 
+
   if (stbi_write_jpg(output_file, width , height, channels, data, 0) == 0) {
     fprintf(stderr, "Error: unable to write %s", output_file);
     exit(1);
