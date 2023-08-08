@@ -118,13 +118,6 @@ a {
     gap: .5rem;
 }
 
-.renderer {
-    width: 100%;
-    height: 100%;
-    border-radius: 2px;
-    background-color: var(--tan-200);
-}
-
 .image-container {
   display: flex;
   width: 100%;
@@ -192,7 +185,6 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--tan-300);
     user-select: none;
     border-radius: 1rem;
     cursor: pointer;
@@ -205,7 +197,7 @@ a {
 }
 
 .file-box--active {
-    border: 2px dashed var(--lavender-200);
+    border: 2px dashed var(--lavender-100);
 }
 
 

@@ -19,13 +19,14 @@ const extractPixelDataFromBase64 = (data) => {
 }
 
 const handleProceedClick = async (event) => {
+  const imageContainer = document.getElementById("imageContainer").children;
+
   const Module = await InitModule();
 
   const copyBuffer = (dest, src, size) => {
     Module.HEAPU8.set(Module.HEAPU8.subarray(src, src + size), dest);
   }
 
-  const imageContainer = document.getElementById("imageContainer").children;
   for (const previewComponent of imageContainer) {
     let base64Image = previewComponent?.getElementsByTagName("img")[0]?.src;
 

@@ -1,7 +1,8 @@
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "thirdparty/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
+#include "thirdparty/stb_image_write.h"
+
 
 #include "utils.h"
 #include "sobel.h"
@@ -51,7 +52,6 @@ int main(int argc, char **argv) {
   */
 
   cv_apply_threshold(data, width, height, 1, THRESHOLD);
-
 
   if (stbi_write_jpg(output_file, width , height, channels, data, 0) == 0) {
     fprintf(stderr, "Error: unable to write %s", output_file);
