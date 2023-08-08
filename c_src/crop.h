@@ -11,7 +11,7 @@
 
 #include <stdlib.h>
 
-EXPORT_FN size_t cv_get_left_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels);
+EXPORT_FN size_t cv_get_left_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels, int offset);
 EXPORT_FN size_t cv_get_right_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels);
 EXPORT_FN size_t cv_get_top_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels);
 EXPORT_FN size_t cv_get_bottom_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels);

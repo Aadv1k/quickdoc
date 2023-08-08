@@ -51,56 +51,60 @@ size_t cv_get_bottom_edge(uint8_t* edgeData, size_t width, size_t height, uint8_
 }
 
 EXPORT_FN
-size_t cv_get_left_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
-    assert(channels == 1 && "cv_get_left_edge expects GRAYSCALE image");
-    size_t minIndex = width - 1;
+size_t cv_get_left_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels, int offset) {
+    (void)channels;
+    size_t longestEdge = 0, longestXIndex = 0;
 
-    for (size_t i = 3; i < height - 3; i++) {
-        for (size_t j = 3; j < width - 3; j++) {
+    for (size_t i = 2; i < height - 2; i++) {
+        for (size_t j = offset + 2; j < width - 2; j++) {
+
             size_t currentIndex = (i * width) + j;
+            if (edgeData[currentIndex] == BLACK) continue;
 
-            if (
-                (edgeData[currentIndex] == WHITE && edgeData[currentIndex + 1] == WHITE) &&
-                (edgeData[(i - 1) * width + j] == WHITE && edgeData[(i - 2) * width + j] == WHITE && edgeData[(i - 3) * width + j] == WHITE) &&
-                (edgeData[(i + 1) * width + j] == WHITE && edgeData[(i + 2) * width + j] == WHITE && edgeData[(i + 3) * width + j] == WHITE)
-                ) {
-              if (j < minIndex) minIndex = j;
+            size_t yy = i;
+            while (yy <= height - 2 && (edgeData[(yy * width) + j] == WHITE &&
+                                    edgeData[(yy * width) + j + 1] == WHITE)
+                   ) yy++;
+
+            if (yy - i >= longestEdge) {
+                longestEdge = yy - i;
+                longestXIndex = j;
             }
+
         }
     }
-
-    return minIndex;
+    return longestXIndex;
 }
 
 EXPORT_FN
 size_t cv_get_right_edge(uint8_t* edgeData, size_t width, size_t height, uint8_t channels) {
-    assert(channels == 1 && "cv_get_right_edge expects GRAYSCALE image");
+    (void)channels;
+    size_t longestEdge = 0, longestXIndex = 0;
 
-    size_t maxIndex = 0;
+    for (size_t i = 2; i < height - 2; i++) {
+        for (size_t j = width - 3; j >= 2; j--) {
 
-    size_t rowMargin = 3;
-    size_t colMargin = 3;
-
-    for (size_t i = rowMargin; i < height - rowMargin; i++) {
-        for (size_t j = width - colMargin - 1; j >= colMargin; j--) {
             size_t currentIndex = (i * width) + j;
+            if (edgeData[currentIndex] == BLACK) continue;
 
+            size_t yy = i;
+            while (yy <= height - 2 && (edgeData[(yy * width) + j] == WHITE &&
+                                    edgeData[(yy * width) + j + 1] == WHITE)
+                   ) yy++;
 
-            if (edgeData[currentIndex] >= 200) {
-                if (j > maxIndex) {
-                    maxIndex = j;
-                }
+            if (yy - i >= longestEdge) {
+                longestEdge = yy - i;
+                longestXIndex = j;
             }
+
         }
     }
-    return maxIndex;
+
+    return longestXIndex;
 }
 
 EXPORT_FN
 size_t cv_crop_x_edge_grayscale_and_get_width(uint8_t* data, size_t width, size_t height, uint8_t channels, size_t leftEdge, size_t rightEdge) {
-    if (leftEdge > width / 2) leftEdge = width / 2;
-    if (rightEdge > width / 2) rightEdge = 0;
-
     size_t croppedWidth = width - (leftEdge + rightEdge);
     size_t newDataSize = sizeof(uint8_t) * croppedWidth * height * channels;
     uint8_t* newData = (uint8_t*)malloc(newDataSize);
