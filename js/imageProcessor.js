@@ -1,5 +1,4 @@
 import InitModule from "../wasm/build.js";
-import SelectedFileMap from "./SelectedFileMap.js";
 import ImagePreviewComponent from "./ImagePreviewComponent.js";
 
 const GRAYSCALE = 1,
@@ -26,7 +25,10 @@ const handleProceedClick = async (event) => {
     Module.HEAPU8.set(Module.HEAPU8.subarray(src, src + size), dest);
   }
 
-  for (const [imageName, base64Image] of SelectedFileMap) {
+  const imageContainer = document.getElementById("imageContainer").children;
+  for (const previewComponent of imageContainer) {
+    let base64Image = previewComponent?.getElementsByTagName("img")[0]?.src;
+
     let { data, width, height } = extractPixelDataFromBase64(base64Image);
     let channels = 4;
 
@@ -46,8 +48,11 @@ const handleProceedClick = async (event) => {
 
     let leftEdge = Module.ccall("cv_get_left_edge", "number", ["number", "number", "number", "number"], [copiedBuffer, width, height, channels]);
     let rightEdge = Module.ccall("cv_get_right_edge", "number", ["number", "number", "number", "number"], [copiedBuffer, width, height, channels]);
+
     width = Module.ccall("cv_crop_x_edge_grayscale_and_get_width", "number", ["number", "number", "number", "number", "number", "number", "number"], [buffer, width, height, channels, leftEdge, rightEdge]);
 
+
+    Module.ccall("cv_apply_threshold", null, ["number", "number", "number", "number"], [buffer, width, height, channels, 128]);
     Module.ccall("cv_expand_grayscale_to_rgba", null, ["number", "number", "number", "number"], [buffer, width, height, channels]);
 
     Module._free(buffer);

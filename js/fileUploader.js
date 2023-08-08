@@ -1,7 +1,8 @@
-import SelectedFileMap from "./SelectedFileMap.js"
 import ImagePreviewComponent from "./ImagePreviewComponent.js";
 
 const MAX_FILES = 32; // TODO: this number is arbitiary
+
+let SelectedFiles = new Set();
 
 const readFileAsBase64 = (file) => {
     console.assert(typeof file === "object", "readFileAsBase64 consumes a File object");
@@ -23,16 +24,15 @@ const handleFileBoxDrop = async (event) => {
         btnProceed.classList.remove("btn--disabled");
         for (const file of files) {
             if (!file.type.startsWith("image")) continue;
-            if (SelectedFileMap.get(file.name)) continue;
+            if (SelectedFiles.has(file.name)) continue;
 
-            const image = new Image();
-            image.src = await readFileAsBase64(file);
-
-            SelectedFileMap.set(file.name, image.src);
+            const imagePreviewComponent = new ImagePreviewComponent(await readFileAsBase64(file), null, (e) => {
+                e.target.parentElement.remove();
+            }, (e) => {}, false);
+            document.getElementById("imageContainer").appendChild(imagePreviewComponent);
         }
     }
     event.target.classList.remove('file-box--active');
-    renderImagePreviews();
 }
 
 const handleFileBoxDragover = (event) => {
@@ -54,29 +54,15 @@ const handleFileInputChange = async (event) => {
     }
 
     for (const file of files) {
-        if (SelectedFileMap.has(file.name)) continue;
+        if (SelectedFiles.has(file.name)) continue;
 
-        const image = new Image();
-        image.src = await readFileAsBase64(file);
-
-        SelectedFileMap.set(file.name, image.src);
+        const imagePreviewComponent = new ImagePreviewComponent(await readFileAsBase64(file), null, (e) => {
+            e.target.parentElement.remove();
+        }, (e) => {}, false);
+        document.getElementById("imageContainer").appendChild(imagePreviewComponent);
     }
-
-    renderImagePreviews();
 }
 
-
-function renderImagePreviews() {
-  imageContainer.innerHTML = "";
-  for (const [imgName, imgData] of SelectedFileMap) {
-    const imgComponent = new ImagePreviewComponent(imgData, imgName, (e) => {
-        SelectedFileMap.delete(e.target.parentElement.getAttribute("data-value"));
-        e.target.parentElement.remove();
-        console.log(SelectedFileMap);
-    }, () => {}, false);
-    imageContainer.appendChild(imgComponent);
-  }
-}
 
 export default function setupFileUploader() {
     const fileBox = document.getElementById("fileBox");
