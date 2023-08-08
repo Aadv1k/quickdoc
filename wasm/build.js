@@ -27,7 +27,7 @@ Module['ready'] = new Promise((resolve, reject) => {
   readyPromiseResolve = resolve;
   readyPromiseReject = reject;
 });
-["_malloc","_free","_cv_squish_rgba_to_grayscale","_cv_expand_grayscale_to_rgba","_cv_apply_threshold","_cv_get_top_edge","_cv_get_bottom_edge","_cv_get_left_edge","_cv_get_right_edge","_cv_crop_x_edge_grayscale_and_get_width","_cv_crop_y_edge_grayscale_and_get_height","_cv_apply_sobel_filter_grayscale","_fflush","onRuntimeInitialized"].forEach((prop) => {
+["_malloc","_free","_cv_squish_rgba_to_grayscale","_cv_expand_grayscale_to_rgba","_cv_apply_threshold","_cv_get_top_edge","_cv_get_left_edge","_cv_crop_x_edge_grayscale_and_get_width","_cv_crop_y_edge_grayscale_and_get_height","_cv_apply_sobel_filter_grayscale","_fflush","onRuntimeInitialized"].forEach((prop) => {
   if (!Object.getOwnPropertyDescriptor(Module['ready'], prop)) {
     Object.defineProperty(Module['ready'], prop, {
       get: () => abort('You are getting ' + prop + ' on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js'),
@@ -1438,11 +1438,7 @@ var _cv_apply_threshold = Module["_cv_apply_threshold"] = createExportWrapper("c
 /** @type {function(...*):?} */
 var _cv_get_top_edge = Module["_cv_get_top_edge"] = createExportWrapper("cv_get_top_edge");
 /** @type {function(...*):?} */
-var _cv_get_bottom_edge = Module["_cv_get_bottom_edge"] = createExportWrapper("cv_get_bottom_edge");
-/** @type {function(...*):?} */
 var _cv_get_left_edge = Module["_cv_get_left_edge"] = createExportWrapper("cv_get_left_edge");
-/** @type {function(...*):?} */
-var _cv_get_right_edge = Module["_cv_get_right_edge"] = createExportWrapper("cv_get_right_edge");
 /** @type {function(...*):?} */
 var _cv_crop_x_edge_grayscale_and_get_width = Module["_cv_crop_x_edge_grayscale_and_get_width"] = createExportWrapper("cv_crop_x_edge_grayscale_and_get_width");
 /** @type {function(...*):?} */
