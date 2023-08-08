@@ -15,8 +15,8 @@
 #endif
 
 
-EXPORT_FN void cv_squish_rgba_to_grayscale(uint8_t* data, uint8_t* newData, size_t width, size_t height, uint8_t channels);
+EXPORT_FN void cv_squish_rgba_to_grayscale(uint8_t* data, size_t width, size_t height, uint8_t channels);
 
-EXPORT_FN void cv_expand_grayscale_to_rgba(uint8_t* data, uint8_t* newData, size_t width, size_t height, uint8_t channels);
+EXPORT_FN void cv_expand_grayscale_to_rgba(uint8_t* data, size_t width, size_t height, uint8_t channels);
 
 #endif

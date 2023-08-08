@@ -10,4 +10,4 @@ $(OUTPUT_DIR)/$(OUTPUT_FILE): $(SRC_FILES)
 	$(CC) $(CCFLAGS) $(SRC_FILES) -o $(OUTPUT_DIR)/$(OUTPUT_FILE)
 
 cli: $(SRC_FILES)
-	gcc -Wall -Wextra $(SRC_FILES) $(SRC_DIR)/main.c -o $(OUTPUT_DIR)/main
+	gcc -Wall -Wextra -g $(SRC_FILES) $(SRC_DIR)/main.c -o $(OUTPUT_DIR)/main
