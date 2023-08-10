@@ -10,9 +10,57 @@
 
 #include <stdint.h>
 
+#define MAX_FLOOD_F_VISITED 50
+
 void usage(const char * program) {
   printf("\nUsage:\t%s input.jpg output.jpg\n\n", program);
   printf("Applies the processing of quickdoc to input file and writes to output\n\n");
+}
+
+static int dr[4] = {-1, 1, 0, 0};
+static int dc[4] = {0, 0, -1, 1};
+
+void floodFill(uint8_t * data, size_t width, size_t height, size_t channels, int startRow, int startCol, int fillValue) {
+    bool visited[MAX_FLOOD_F_VISITED][MAX_FLOOD_F_VISITED] = {false};
+
+    Point queue[MAX_FLOOD_F_VISITED * MAX_FLOOD_F_VISITED];
+    int front = 0, rear = 0;
+
+    queue[rear++] = (Point){startRow, startCol};
+    visited[startRow][startCol] = true;
+
+    while (front != rear) {
+        Point current = queue[front++];
+        int row = current.row;
+        int col = current.col;
+
+        labelArray[row * width + col] = fillValue;
+
+        for (int k = 0; k < 4; k++) {
+            int newRow = row + dr[k];
+            int newCol = col + dc[k];
+
+            if (newRow >= 0 && newRow < height && newCol >= 0 && newCol < width &&
+                !visited[newRow][newCol] &&
+                data[(newRow * width + newCol) * channels] == 255) {
+                queue[rear++] = (Point){newRow, newCol};
+                visited[newRow][newCol] = true;
+            }
+        }
+    }
+}
+
+void cv_create_cca_labels_from_image(uint8_t * data, size_t width, size_t height, uint8_t channels, size_t * labelArray) {
+    assert(channels == 1 && "cv_create_cca_labels_from_image expects a GRAYSCALE image");
+    for (int i = 0; i < height; i++) {
+        int visited[MAX_FLOOD_F_VISITED];
+        for (int j = 0; j < width; j++) {
+            if (visited[i][j] || data[(i * width + j) * channels] == 0) {
+                continue;
+            }
+            floodFill(data, width, height, channels, i, j, i);
+        }
+    }
 }
 
 int main(int argc, char **argv) {

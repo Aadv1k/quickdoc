@@ -11,6 +11,6 @@ void cv_apply_threshold(uint8_t* data, size_t width, size_t height, uint8_t chan
   assert(channels == 1 && "cv_apply_threshold expects GRAYSCALE");
 
   for (size_t i = 0; i < width * height; i++) {
-    data[i] = data[i] <= threshold ? GRAY_1 : WHITE;
+    data[i] = data[i] <= threshold ? WHITE : BLACK;
   }
 }
