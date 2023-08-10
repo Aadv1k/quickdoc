@@ -55,7 +55,7 @@ const handleProceedClick = async (event) => {
     width = Module.ccall("cv_crop_x_edge_grayscale_and_get_width", "number", ["number", "number", "number", "number", "number", "number", "number"], [buffer, width, height, channels, leftEdge, rightEdge]);
 
 
-    //Module.ccall("cv_apply_threshold", null, ["number", "number", "number", "number"], [buffer, width, height, channels, 128]);
+    Module.ccall("cv_apply_threshold", null, ["number", "number", "number", "number"], [buffer, width, height, channels, 128]);
     Module.ccall("cv_expand_grayscale_to_rgba", null, ["number", "number", "number", "number"], [buffer, width, height, channels]);
 
     Module._free(buffer);
