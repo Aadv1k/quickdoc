@@ -69,6 +69,7 @@ a {
     background: none;
     border: none;
     cursor: pointer;
+    position: relative;
 }
 
 .btn--disabled {
@@ -85,6 +86,8 @@ a {
     color: white;
     border-radius: 4px;
     text-transform: capitalize;
+    width: 6.75rem;
+    height: 2.5rem;
 }
 
 .select {
@@ -217,3 +220,23 @@ a {
         width: 25%;
     }
 }
+
+.loader {
+    width: 25px;
+    height: 25px;
+    border: 3px solid #FFF;
+    border-bottom-color: var(--lavender-200);
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    } 
