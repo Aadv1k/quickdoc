@@ -19,8 +19,9 @@ const extractPixelDataFromBase64 = (data) => {
 }
 
 const handleProceedClick = async (event) => {
-  const imageContainer = document.getElementById("imageContainer").children;
+  event.target.innerHTML = '<span class="loader"></span>';
 
+  const imageContainer = document.getElementById("imageContainer").children;
   const Module = await InitModule();
 
   const copyBuffer = (dest, src, size) => {
@@ -48,9 +49,11 @@ const handleProceedClick = async (event) => {
     Module.ccall("cv_apply_sobel_filter_grayscale", null, ["number", "number", "number", "number"], [copiedBuffer, width, height, channels]);
 
     let leftEdge = Module.ccall("cv_get_left_edge", "number", ["number", "number", "number", "number", "number"], [copiedBuffer, width, height, channels, 0]);
-      console.log(leftEdge);
+    if (leftEdge >= width/2) leftEdge = 0;
     let rightEdge = Module.ccall("cv_get_left_edge", "number", ["number", "number", "number", "number", "number"], [copiedBuffer, width, height, channels, leftEdge + 10]);
+
     width = Module.ccall("cv_crop_x_edge_grayscale_and_get_width", "number", ["number", "number", "number", "number", "number", "number", "number"], [buffer, width, height, channels, leftEdge, rightEdge]);
+
 
     Module.ccall("cv_apply_threshold", null, ["number", "number", "number", "number"], [buffer, width, height, channels, 128]);
     Module.ccall("cv_expand_grayscale_to_rgba", null, ["number", "number", "number", "number"], [buffer, width, height, channels]);
@@ -82,6 +85,7 @@ const handleProceedClick = async (event) => {
     }, true);
     document.getElementById("outputContainer").appendChild(imagePreviewComponent);
   }
+  event.target.innerHTML = 'proceed';
 };
 
 export default function setupImageProcessor() {
