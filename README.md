@@ -10,7 +10,13 @@ Quickdoc is a [WebAssembly](https://webassembly.org/) based site that can **auto
 - [ ] some variation of an OCR system
 - [ ] Convert scanned documents to PDF
 
-## Setup
+## Quickstart
+
+all of the necessary files are provided within the 'wasm/' directory.
+
+you can just clone the repo and run it in a server
+
+## Bootstrap
 
 The project uses [emscripten](https://emscripten.org) to compile the C source to wasm
 
