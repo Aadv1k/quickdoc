@@ -7,8 +7,8 @@ Quickdoc is a [WebAssembly](https://webassembly.org/) based site that can **auto
 ## Features
 
 - Auto crop, de-noise and filter the image to look like a scan
-- **In-prog: see [swt](https://github.com/aadv1k/swt)** Some variation of an OCR system
-- Convert scanned documents to PDF. Will need to figure out how PDF works
+- **Not planned** ~~see [swt](https://github.com/aadv1k/swt) Some variation of an OCR system~~
+- **Not planned** ~~Convert scanned documents to PDF. Will need to figure out how PDF works~~
 
 ## Quickstart
 
